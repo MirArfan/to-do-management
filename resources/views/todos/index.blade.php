@@ -12,7 +12,7 @@
       }
 
    </style>
-
+ <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 @endsection
 
 
@@ -47,45 +47,41 @@
                  <a class="btn btn-sm  btn-info mb-2" href="{{route('todos.create')}}">Create Todo</a>
 
                        @if(count($todos)>0)
-                          <table class="table {{$theme=='dark' ? 'table-dark' : 'table-striped'}}">
+                        <table class="table {{$theme=='dark' ? 'table-dark' : 'table-striped'}}" id="todos-table">
                             <thead>
                                 <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Title</th>
-                                <th scope="col">description</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Action</th>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($todos as $todo)
                                 <tr>
-                                    <th scope="row">{{ $loop->iteration }}</th>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>{{ $todo->title }}</td>
                                     <td>{{ $todo->description }}</td>
                                     <td>
-                                        @if($todo->is_completed==1)
-                                            <a class="btn btn-sm text-black bg-success" href="" >Completed</a>
+                                        @if($todo->is_completed)
+                                            <span class="btn btn-sm text-black bg-success">Completed</span>
                                         @else
-                                            <a class="btn btn-sm text-black bg-warning" href="" >Pending</a>
+                                            <span class="btn btn-sm text-black bg-warning">Pending</span>
                                         @endif
                                     </td>
-                                    <td id="outer">
-                                     
-                                       <a class=" inner btn btn-sm bg-success text-white" href="{{route('todos.show', $todo->id)}}" >View</a>
-                                        <a class="inner btn btn-sm bg-info text-black" href="{{route('todos.edit',$todo->id)}}" >Edit</a>
-                                        <form method="post" action="{{route('todos.destroy')}}" class="inner">
-                                            @csrf
-                                            @method('DELETE')
-                                             <input type="hidden" name="todo_id" value="{{$todo->id}}" >
-                                             <input type="submit" class="btn btn-sm btn-danger" value="Delete">
+                                    <td>
+                                        <a href="{{ route('todos.edit', $todo->id) }}" class="btn btn-sm btn-info">Edit</a>
+                                        <form action="{{ route('todos.destroy', $todo->id) }}" method="POST" style="display:inline;">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                                         </form>
                                     </td>
-
+                                </tr>
                                 @endforeach
-                                
                             </tbody>
-                      </table>
+                        </table>
+
                       @else
                       <h3>No todos created yet</h3>
                        @endif
@@ -94,4 +90,23 @@
         </div>
     </div>
 </div>
+
 @endsection
+
+@push('scripts')
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    $('#todos-table').DataTable({
+        paging: true,       
+        searching: true,   
+        ordering: true,    
+        info: true      
+    });
+});
+</script>
+@endpush

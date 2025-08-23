@@ -19,7 +19,17 @@
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @yield('styles')
+    <!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 </head>
+
 <body class="{{$theme=='dark' ?'bg-dark': 'bg-light' }}">
     <div id="app">
         <nav class="navbar navbar-expand-md {{$theme=='dark'? 'navbar-dark bg-dark':'navbar-light bg-light'}} shadow-sm">
@@ -94,5 +104,7 @@
             @yield('content')
         </main>
     </div>
+     @vite(['resources/js/app.js'])
+     @stack('scripts')
 </body>
 </html>
