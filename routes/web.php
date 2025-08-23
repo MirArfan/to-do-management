@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ThemeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TodoController;
 
@@ -31,4 +32,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('todos/{id}/edit', [TodoController::class, 'edit'])->name('todos.edit');
     Route::put('todos/update', [TodoController::class, 'update'])->name('todos.update');
     Route::delete('todos/destroy', [TodoController::class, 'destroy'])->name('todos.destroy');
+
+    Route::post('/cookie/create/update', [ThemeController::class,'createAndUpdate'])->name('create-update');
 });

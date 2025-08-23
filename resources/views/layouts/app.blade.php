@@ -12,14 +12,18 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <!-- Font Awesome CDN -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p0RnpzQ3vG3X9o6l1gZ1gF5e4ZL9+P/YhVjK8Wf6BjzG5lV2GmO78QkZjZg8f6m2jLVsRiPjSLP2qZTj4vYbBQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+   <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @yield('styles')
 </head>
-<body>
+<body class="{{$theme=='dark' ?'bg-dark': 'bg-light' }}">
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md {{$theme=='dark'? 'navbar-dark bg-dark':'navbar-light bg-light'}} shadow-sm">
+
             <div class="container">
                 <a class="navbar-brand" href="{{ route('todos.index') }}">
                     <!-- {{ config('app.name', 'Laravel') }} -->
@@ -37,6 +41,18 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
+                        <span class="navbar-text">
+                            <form action="{{route('create-update')}}" method="post" class="d-flex">
+                                @csrf
+                                <input type="checkbox" name="theme" id="theme" value="{{$theme=='dark'?'light':'dark'}}" class="btn-check" onchange="this.form.submit()">
+                                <label for="theme" class="btn btn-secondary">
+                                    <i class="{{$theme=='light'?'fas fa-moon': 'fas fa-sun text-warning'}}"></i>
+
+                                Mode
+                                </label>
+                            </form>
+
+                        </span>
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))

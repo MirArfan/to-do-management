@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
+            <div class="card {{$theme=='dark' ? 'bg-dark text-white' : 'bg-light'}}">
                 <div class="card-header">Todos app</div>
 
                 <div class="card-body">

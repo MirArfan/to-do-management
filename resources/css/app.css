@@ -1,0 +1,21 @@
+/* Card theme */
+.card {
+    background-color: white;
+    color: black;
+}
+
+body.dark .card {
+    background-color: #1e1e1e;
+    color: white;
+}
+
+/* Optional: dashboard, todo list cards */
+.todo-card {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+body.dark .todo-card {
+    background-color: #2c2c2c;
+    color: #f8f9fa;
+}
