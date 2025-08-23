@@ -12,32 +12,33 @@
                 
                         <h3>Edit from</h3>
                        
-                        <form action="{{ route('todos.update') }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <input type="hidden" name="todo_id" value="{{$todo->id}}">
-                         <div class="form-group">
-                                    <label class="col-sm-2 col-form-label">Title</label>
-                                    <input type="text" name="title" class="form-control" value="{{$todo->title}}" placeholder="Enter title">
-                         </div>
-                         <div class="form-group">
-                                    <label class="col-sm-2 col-form-label">description</label>
-                                    <textarea name="description" rows="4" class="form-control" placeholder="Enter description">
-                                        {{$todo->description}}
-                                    </textarea>
-                         </div>
-                         <div class="mb-3">
-                             <lable for="">Status</lable>
-                             <select name="is_completed" class="form-control">
-                                <option disabled selected>Select Option</option>
-                                <option value="1">Completed</option>
-                                <option value="0">Pending</option>
-                             </select>
-                         </div>
-        
-                                <button type="submit" class="btn btn-primary mt-3">Update</button>
-                         </form>
+                        {{-- Laravel Collective Form --}}
+                    {!! Form::model($todo, ['route' => ['todos.update', $todo->id], 'method' => 'PUT']) !!}
 
+                        <div class="form-group mb-3">
+                            {!! Form::label('title', 'Title') !!}
+                            {!! Form::text('title', old('title', $todo->title), ['class' => 'form-control', 'placeholder' => 'Enter title', 'required']) !!}
+                            @error('title')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {!! Form::label('description', 'Description') !!}
+                            {!! Form::textarea('description', old('description', $todo->description), ['class' => 'form-control', 'rows' => 4, 'placeholder' => 'Enter description']) !!}
+                            @error('description')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {!! Form::label('is_completed', 'Status') !!}
+                            {!! Form::select('is_completed', [0 => 'Pending', 1 => 'Completed'], old('is_completed', $todo->is_completed), ['class' => 'form-control', 'required']) !!}
+                        </div>
+
+                        {!! Form::submit('Update', ['class' => 'btn btn-primary mt-2']) !!}
+
+                    {!! Form::close() !!}
                 </div>
             </div>
         </div>

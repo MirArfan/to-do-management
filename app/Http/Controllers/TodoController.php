@@ -59,7 +59,7 @@ class TodoController extends Controller
        $todo = Todo::where('id', $request->todo_id)
             ->where('user_id', auth()->id())
             ->first();
-            
+
        if(!$todo){
             request()->session()->flash('error', 'Unable to locate the todo');
             return to_route('todos.index')->withErrors([
@@ -69,7 +69,7 @@ class TodoController extends Controller
         $todo->update([
             'title'=>$request->title,
             'description'=>$request->description,
-            'is_completed'=>$request->is_completed
+            'is_completed' => $request->is_completed ?? 0,
         ]);
        $request->session()->flash('info', 'Todo updated successfully!');
         return redirect()->route('todos.index');

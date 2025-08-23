@@ -11,7 +11,7 @@
                 <div class="card-body">
                 
 
-                <h3>Create Post</h3>
+                  <h3>Create Post</h3>
  
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -23,19 +23,26 @@
                     </div>
                 @endif
                        
-                        <form method="POST" action="{{ route('todos.store') }}">
-                        @csrf
-                         <div class="form-group">
-                                    <label class="col-sm-2 col-form-label">Title</label>
-                                    <input type="text" name="title" class="form-control" placeholder="Enter title">
-                         </div>
-                         <div class="form-group">
-                                    <label class="col-sm-2 col-form-label">description</label>
-                                    <textarea name="description" rows="4" class="form-control" placeholder="Enter description"></textarea>
-                         </div>
-        
-                                <button type="submit" class="btn btn-primary mt-3">Submit</button>
-                         </form>
+                        {{-- Laravel Collective Form --}}
+                    {!! Form::open(['route' => 'todos.store']) !!}
+                        <div class="form-group mb-3">
+                            {!! Form::label('title', 'Title') !!}
+                            {!! Form::text('title', old('title'), ['class' => 'form-control', 'placeholder' => 'Enter title', 'required']) !!}
+                            @error('title')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {!! Form::label('description', 'Description') !!}
+                            {!! Form::textarea('description', old('description'), ['class' => 'form-control', 'rows' => 4, 'placeholder' => 'Enter description']) !!}
+                            @error('description')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        {!! Form::submit('Submit', ['class' => 'btn btn-primary mt-2']) !!}
+                    {!! Form::close() !!}
 
                 </div>
             </div>
