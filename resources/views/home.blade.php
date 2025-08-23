@@ -4,8 +4,8 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+            <div class="card {{$theme=='dark' ? 'bg-dark text-white' : 'bg-light'}}">
+                <div class="card-header {{$theme=='dark' ? 'bg-secondary text-white' : 'bg-light text-dark'}}">{{ __('Dashboard') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -15,6 +15,11 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+                    <div class="mt-4">
+                        <a href="{{ route('todos.index') }}" class="btn btn-primary">
+                            Go to To-Do List
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

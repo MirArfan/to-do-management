@@ -44,7 +44,7 @@
                  @endif
                  
 
-                 <a class="btn btn-sm  btn-info mb-2" href="{{route('todos.create')}}">Create Todo</a>
+                 <a class="btn btn-sm btn-primary mb-2" href="{{route('todos.create')}}">Create Todo</a>
 
                        @if(count($todos)>0)
                         <table class="table {{$theme=='dark' ? 'table-dark' : 'table-striped'}}" id="todos-table">
