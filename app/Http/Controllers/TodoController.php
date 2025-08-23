@@ -9,10 +9,8 @@ use App\Models\Todo;
 class TodoController extends Controller
 {
     public function index(){
-        $todos=Todo::all();
-        return view('todos.index', [
-            'todos'=>$todos
-        ]); 
+        $todos = Todo::where('user_id', auth()->id())->get();
+        return view('todos.index', compact('todos'));
     }
      public function create(){
         return view('todos.create');
@@ -22,6 +20,7 @@ class TodoController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'is_completed' => 0, 
+            'user_id' => auth()->id(),
         ]);
 
         $request->session()->flash('success', 'Todo created successfully!');
@@ -29,7 +28,10 @@ class TodoController extends Controller
     }
     public function show($id)
     {
-        $todo=Todo::find($id);
+        $todo = Todo::where('id', $id)  
+        ->where('user_id', auth()->id())
+        ->first();
+
         if(!$todo){
             request()->session()->flash('error', 'Unable to locate the todo');
             return to_route('todos.index')->withErrors([
@@ -40,7 +42,10 @@ class TodoController extends Controller
     }
     public function edit($id)
     {
-        $todo=Todo::find($id);
+         $todo = Todo::where('id', $id)   
+        ->where('user_id', auth()->id())
+        ->first();
+
         if(!$todo){
             request()->session()->flash('error', 'Unable to locate the todo');
             return to_route('todos.index')->withErrors([
@@ -51,7 +56,10 @@ class TodoController extends Controller
    
     }
     public function update(TodoRequest $request){
-       $todo= Todo::find($request->todo_id);
+       $todo = Todo::where('id', $request->todo_id)
+            ->where('user_id', auth()->id())
+            ->first();
+            
        if(!$todo){
             request()->session()->flash('error', 'Unable to locate the todo');
             return to_route('todos.index')->withErrors([
@@ -69,7 +77,9 @@ class TodoController extends Controller
     }
 
     public function destroy(Request $request){
-        $todo= Todo::find($request->todo_id);
+       $todo = Todo::where('id', $request->todo_id)
+            ->where('user_id', auth()->id())
+            ->first();
        if(!$todo){
             request()->session()->flash('error', 'Unable to locate the todo');
             return to_route('todos.index')->withErrors([
@@ -81,4 +91,9 @@ class TodoController extends Controller
         return redirect()->route('todos.index');
 
     }
+   
+
+    
+
+
 }
