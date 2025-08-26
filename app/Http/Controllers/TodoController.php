@@ -9,23 +9,62 @@ use App\Models\Todo;
 class TodoController extends Controller
 {
     public function index(){
-        $todos = Todo::where('user_id', auth()->id())->get();
-        return view('todos.index', compact('todos'));
+      $todos = Todo::where('user_id', auth()->id())->get();
+      return view('todos.index', compact('todos'));
     }
      public function create(){
         return view('todos.create');
     }
-     public function store(TodoRequest $request){
-        Todo::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'is_completed' => 0, 
-            'user_id' => auth()->id(),
-        ]);
 
-        $request->session()->flash('success', 'Todo created successfully!');
-        return redirect()->route('todos.index');
+    // JSON list for AJAX
+    public function list(){
+        $todos = Todo::where('user_id', auth()->id())->get();
+        return response()->json($todos);
     }
+
+
+    //  public function store(TodoRequest $request){
+        
+    //     $todo= Todo::create([
+    //         'title' => $request->title,
+    //         'description' => $request->description,
+    //         'is_completed' => 0, 
+    //         'user_id' => auth()->id(),
+    //     ]);
+    //     if($request->ajax()){
+    //         return response()->json([
+    //             'success'=>true,
+    //             'message'=>'Todo created successfully!',
+    //             'data'=> $todo
+    //         ]);
+    //     }
+    //     $request->session()->flash('success', 'Todo created successfully!');
+    //     return redirect()->route('todos.index');
+    // }
+    
+public function store(Request $request)
+{
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+    ]);
+
+    $todo = Todo::create([
+        'title' => $request->title,
+        'description' => $request->description,
+        'is_completed' => false,
+        'user_id' => auth()->id(),
+    ]);
+
+    return response()->json([
+        'message' => 'Todo created successfully',
+        'todo' => $todo
+    ], 201);
+}
+
+
+
+    
     public function show($id)
     {
         $todo = Todo::where('id', $id)  
@@ -33,12 +72,10 @@ class TodoController extends Controller
         ->first();
 
         if(!$todo){
-            request()->session()->flash('error', 'Unable to locate the todo');
-            return to_route('todos.index')->withErrors([
-                'error'=>'Unable to locate the todo'
-            ]);
+           return response()->json(['success'=>false,'message'=>'Todo not found'],404);
+      
         }
-        return view('todos.show',['todo'=>$todo]);
+         return response()->json($todo);
     }
     public function edit($id)
     {
@@ -55,43 +92,47 @@ class TodoController extends Controller
         return view('todos.edit',['todo'=>$todo]);
    
     }
-    public function update(TodoRequest $request){
-       $todo = Todo::where('id', $request->todo_id)
-            ->where('user_id', auth()->id())
-            ->first();
+    public function update(TodoRequest $request , $id){
+        $todo = Todo::where('id', $id)->where('user_id', auth()->id())->first();
 
-       if(!$todo){
-            request()->session()->flash('error', 'Unable to locate the todo');
-            return to_route('todos.index')->withErrors([
-                'error'=>'Unable to locate the todo'
-            ]);
+        if(!$todo){
+            return response()->json(['success'=>false,'message'=>'Todo not found'],404);
         }
+
         $todo->update([
             'title'=>$request->title,
             'description'=>$request->description,
             'is_completed' => $request->is_completed ?? 0,
         ]);
-       $request->session()->flash('info', 'Todo updated successfully!');
-        return redirect()->route('todos.index');
+        return response()->json([
+            'success'=>true,
+            'message'=>'Todo updated successfully!',
+            'data'=>$todo
+        ]);
 
     }
 
-    public function destroy(Request $request){
-       $todo = Todo::where('id', $request->todo_id)
-            ->where('user_id', auth()->id())
-            ->first();
+    public function destroy($id){
+       $todo = Todo::where('id', $id)->where('user_id', auth()->id())->first();
        if(!$todo){
-            request()->session()->flash('error', 'Unable to locate the todo');
-            return to_route('todos.index')->withErrors([
-                'error'=>'Unable to locate the todo'
-            ]);
+            return response()->json(['success'=>false,'message'=>'Todo not found'],404);
         }
-        $todo->delete();
-        $request->session()->flash('success', 'Todo deleted successfully!');
-        return redirect()->route('todos.index');
+       $todo->delete();
+        return response()->json(['success'=>true,'message'=>'Todo deleted successfully!']);
+     }
 
-    }
-   
+    public function toggle(Request $request, Todo $todo)
+     {
+        $request->validate([
+            'is_completed' => 'required|boolean',
+        ]);
+
+        $todo->update([
+            'is_completed' => $request->is_completed,
+        ]);
+
+        return response()->json(['message' => 'Todo status updated successfully']);
+     }
 
     
 
