@@ -23,6 +23,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/cookie/create/update', [ThemeController::class,'createAndUpdate'])->name('create-update');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('todos', [TodoController::class, 'index'])->name('todos.index'); // main page
@@ -34,5 +35,5 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/todos/{todo}/toggle', [TodoController::class, 'toggle'])->name('todos.toggle');
 
-    Route::post('/cookie/create/update', [ThemeController::class,'createAndUpdate'])->name('create-update');
+    
 });
